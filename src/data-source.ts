@@ -1,7 +1,10 @@
 import { DataSource } from "typeorm";
 import { DataSourceType } from "./types/config";
-import { Room } from "./entities/Room";
+import { Feature, Image, Room } from "./entities/Room";
 import dotenv from 'dotenv';
+import { Company, Location } from "./entities/Company";
+import { User } from "./entities/User";
+import { Receipt, Reservation } from './entities/Reservation';
 
 dotenv.config();
 if (
@@ -37,6 +40,7 @@ try {
 
 export const appDataSource = new DataSource({
   type: "mysql",
+  // Todo -> configure the dialect to load from the .env
   host,
   port,
   username,
@@ -44,5 +48,14 @@ export const appDataSource = new DataSource({
   database,
   logging: true,
   synchronize: true,
-  entities: [Room],
+  entities: [
+    Company,
+    Room,
+    User,
+    Reservation,
+    Receipt,
+    Image,
+    Feature,
+    Location,
+  ],
 });
