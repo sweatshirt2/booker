@@ -1,4 +1,15 @@
-import { Entity, Column, PrimaryGeneratedColumn, } from "typeorm";
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  JoinTable,
+  ManyToMany,
+} from "typeorm";
+import { Company } from "./Company";
+import { Reservation } from "./Reservation";
 
 enum RoomTypes {
   SINGLE = 'Single',
@@ -7,29 +18,6 @@ enum RoomTypes {
   STANDARD = 'Standard Family',
   FAMILY = 'Family',
 };
-
-@Entity()
-export class Image {
-  @PrimaryGeneratedColumn("uuid")
-  id!: string;
-
-  @Column({
-    type: 'string',
-    nullable: false,
-    unique: true,
-  })
-  url!: string;
-
-  @Column({
-    type: 'enum',
-    enum: RoomTypes,
-    name: 'room_type',
-    nullable: false,
-  })
-  roomType!: RoomTypes;
-
-  // relation with company
-}
 
 @Entity()
 export class Room {
@@ -63,5 +51,57 @@ export class Room {
   })
   isOccupied!: boolean;
 
-  // relation with company
+  @ManyToOne(() => Company, (company) => company.rooms)
+  @JoinColumn({ name: 'company_id' })
+  company!: Company;
+
+  @OneToMany(() => Reservation, (reservation) => reservation.room)
+  @JoinColumn()
+  reservations!: Reservation[];
+
+  @ManyToMany(() => Feature)
+  @JoinTable()
+  features!: Feature[];
 }
+
+@Entity()
+export class Image {
+  @PrimaryGeneratedColumn("uuid")
+  id!: string;
+
+  @Column({
+    type: 'varchar',
+    nullable: false,
+    unique: true,
+  })
+  url!: string;
+
+  @Column({
+    type: 'enum',
+    enum: RoomTypes,
+    name: 'room_type',
+    nullable: false,
+  })
+  roomType!: RoomTypes;
+
+  @ManyToOne(() => Company, (company) => company.images)
+  @JoinColumn({ name: 'company_id' })
+  company!: Company;
+}
+
+@Entity()
+export class Feature {
+  @PrimaryGeneratedColumn("uuid")
+  id!: string;
+
+  @Column({
+    type: 'varchar',
+    nullable: false,
+    unique: true,
+  })
+  name!: string;
+}
+
+
+// Todo -> add features
+// ? hot shower, wifi, tv, dstv, balcony, breakfast,

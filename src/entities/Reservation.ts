@@ -1,4 +1,14 @@
-import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToOne,
+  JoinColumn,
+  ManyToOne,
+} from "typeorm";
+import { User } from "./User";
+import { Company } from "./Company";
+import { Room } from "./Room";
 
 @Entity()
 export class Reservation {
@@ -6,22 +16,29 @@ export class Reservation {
   id!: string;
 
   @Column({
-    type: 'string',
+    type: 'varchar',
     nullable: false,
   })
   customer!: string;
 
   @Column({
-    type: 'string',
+    type: 'varchar',
     name: 'reservation_number',
     nullable: false,
   })
   reservationNumber!: string;
 
-  // relation with company
-  // relation with room
-  // relation with user
-  // relation with receipt
+  @ManyToOne(() => Company, (company) => company.reservations)
+  @JoinColumn({ name: 'company_id' })
+  company!: Company;
+
+  @ManyToOne(() => Room, (room) => room.reservations)
+  @JoinColumn({ name: 'room_id' })
+  room!: Room;
+
+  @ManyToOne(() => User, (user) => user.reservations)
+  @JoinColumn({ name: 'user_id' })
+  user!: User;
 }
 
 @Entity()
@@ -30,9 +47,13 @@ export class Receipt {
   id!: string;
 
   @Column({
-    type: 'string',
+    type: 'varchar',
     name: 'screenshot_url',
     nullable: false,
   })
   screenshotUrl!: string;
+
+  @OneToOne(() => Reservation)
+  @JoinColumn({ name: 'reservation_id' })
+  reservation!: Reservation;
 }
