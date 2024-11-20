@@ -5,6 +5,7 @@ import cors from 'cors';
 import reservationRouter from './routes/reservations';
 import imageRouter from "./routes/images";
 import roomRouter from "./routes/rooms";
+import userRouter from "./routes/user";
 
 dotenv.config();
 
@@ -32,6 +33,7 @@ app.get('/', (req: Request, res: Response) => {
 app.use('/reservations', reservationRouter);
 app.use('/rooms', roomRouter);
 app.use('/images', imageRouter);
+app.use('/users', userRouter);
 
 app.listen(port, () => {
   console.log("honey, im home. riding", port);

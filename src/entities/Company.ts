@@ -13,65 +13,65 @@ import { Reservation } from "./Reservation";
 @Entity()
 export class Location {
   @PrimaryGeneratedColumn("uuid")
-  id!: string;
+  id?: string;
 
   @Column({
     type: 'varchar',
     nullable: false,
   })
-  city!: string;
+  city?: string;
 
   @Column({
     type: 'varchar',
     name: 'sub_city',
     nullable: false,
   })
-  subCity!: string;
+  subCity?: string;
 
   @Column({
     type: 'varchar',
     nullable: false,
   })
-  neighborhood!: string;
+  neighborhood?: string;
 
   @Column({
     type: 'varchar',
     nullable: false,
     unique: true,
   })
-  url!: string;
+  url?: string;
 }
 
 @Entity()
 export class Company {
   @PrimaryGeneratedColumn("uuid")
-  id!: string;
+  id?: string;
 
   @Column({
     type: 'varchar',
     nullable: false,
     unique: true,
   })
-  name!: string;
+  name?: string;
 
   // ? optional params to relation decorators
   @OneToOne(() => Location)
   @JoinColumn({ name: 'location_id' })
-  location!: Location;
+  location?: Location;
 
   @OneToMany(() => User, (user) => user.company)
   @JoinColumn()
-  users!: User[];
+  users?: User[];
 
   @OneToMany(() => Room, (room) => room.company)
   @JoinColumn()
-  rooms!: Room[];
+  rooms?: Room[];
 
   @OneToMany(() => Image, (image) => image.company)
   @JoinColumn()
-  images!: Image[];
+  images?: Image[];
 
   @OneToMany(() => Reservation, (reservation) => reservation.company)
   @JoinColumn()
-  reservations!: Reservation[];
+  reservations?: Reservation[];
 }
