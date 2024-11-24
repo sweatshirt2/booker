@@ -13,31 +13,30 @@ import { Reservation } from "./Reservation";
 @Entity()
 export class Location {
   @PrimaryGeneratedColumn("uuid")
-  id?: string;
+  id!: string;
 
   @Column({
     type: 'varchar',
     nullable: false,
   })
-  city?: string;
+  city!: string;
 
   @Column({
     type: 'varchar',
     name: 'sub_city',
     nullable: false,
   })
-  subCity?: string;
+  subCity!: string;
 
   @Column({
     type: 'varchar',
     nullable: false,
   })
-  neighborhood?: string;
+  neighborhood!: string;
 
   @Column({
     type: 'varchar',
-    nullable: false,
-    unique: true,
+    nullable: true,
   })
   url?: string;
 }
@@ -45,14 +44,14 @@ export class Location {
 @Entity()
 export class Company {
   @PrimaryGeneratedColumn("uuid")
-  id?: string;
+  id!: string;
 
   @Column({
     type: 'varchar',
     nullable: false,
     unique: true,
   })
-  name?: string;
+  name!: string;
 
   // ? optional params to relation decorators
   @OneToOne(() => Location)

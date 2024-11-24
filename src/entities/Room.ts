@@ -7,11 +7,12 @@ import {
   OneToMany,
   JoinTable,
   ManyToMany,
+  OneToOne,
 } from "typeorm";
 import { Company } from "./Company";
 import { Reservation } from "./Reservation";
 
-enum RoomTypes {
+export enum RoomTypes {
   SINGLE = 'Single',
   DOUBLE = 'Double',
   TWIN = 'Twin',
@@ -28,13 +29,13 @@ export class Room {
     type: 'decimal',
     nullable: false,
   })
-  price?: number;
+  price!: number;
 
   @Column({
     type: 'tinyint',
     nullable: false,
   })
-  floor?: number;
+  floor!: number;
 
   @Column({
     type: 'enum',
@@ -42,7 +43,7 @@ export class Room {
     name: 'room_type',
     nullable: false,
   })
-  roomType?: RoomTypes;
+  roomType!: RoomTypes;
 
   @Column({
     type: 'boolean',
@@ -55,9 +56,9 @@ export class Room {
   @JoinColumn({ name: 'company_id' })
   company?: Company;
 
-  @OneToMany(() => Reservation, (reservation) => reservation.room)
+  @OneToOne(() => Reservation, (reservation) => reservation.room)
   @JoinColumn()
-  reservations?: Reservation[];
+  reservation?: Reservation;
 
   @ManyToMany(() => Feature)
   @JoinTable()
