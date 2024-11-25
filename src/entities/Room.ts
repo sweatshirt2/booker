@@ -7,11 +7,12 @@ import {
   OneToMany,
   JoinTable,
   ManyToMany,
+  OneToOne,
 } from "typeorm";
 import { Company } from "./Company";
 import { Reservation } from "./Reservation";
 
-enum RoomTypes {
+export enum RoomTypes {
   SINGLE = 'Single',
   DOUBLE = 'Double',
   TWIN = 'Twin',
@@ -22,7 +23,7 @@ enum RoomTypes {
 @Entity()
 export class Room {
   @PrimaryGeneratedColumn("uuid")
-  id!: string;
+  id?: string;
 
   @Column({
     type: 'decimal',
@@ -49,32 +50,31 @@ export class Room {
     name: 'is_occupied',
     default: false,
   })
-  isOccupied!: boolean;
+  isOccupied?: boolean;
 
-  @ManyToOne(() => Company, (company) => company.rooms)
+  @ManyToOne(() => Company, (company) => company.rooms, { nullable: false })
   @JoinColumn({ name: 'company_id' })
   company!: Company;
 
   @OneToMany(() => Reservation, (reservation) => reservation.room)
-  @JoinColumn()
-  reservations!: Reservation[];
+  reservations?: Reservation[];
 
   @ManyToMany(() => Feature)
   @JoinTable()
-  features!: Feature[];
+  features?: Feature[];
 }
 
 @Entity()
 export class Image {
   @PrimaryGeneratedColumn("uuid")
-  id!: string;
+  id?: string;
 
   @Column({
     type: 'varchar',
     nullable: false,
     unique: true,
   })
-  url!: string;
+  url?: string;
 
   @Column({
     type: 'enum',
@@ -82,24 +82,24 @@ export class Image {
     name: 'room_type',
     nullable: false,
   })
-  roomType!: RoomTypes;
+  roomType?: RoomTypes;
 
-  @ManyToOne(() => Company, (company) => company.images)
+  @ManyToOne(() => Company, (company) => company.images, { nullable: false, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'company_id' })
-  company!: Company;
+  company?: Company;
 }
 
 @Entity()
 export class Feature {
   @PrimaryGeneratedColumn("uuid")
-  id!: string;
+  id?: string;
 
   @Column({
     type: 'varchar',
     nullable: false,
     unique: true,
   })
-  name!: string;
+  name?: string;
 }
 
 

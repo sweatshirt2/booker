@@ -36,10 +36,9 @@ export class Location {
 
   @Column({
     type: 'varchar',
-    nullable: false,
-    unique: true,
+    nullable: true,
   })
-  url!: string;
+  url?: string;
 }
 
 @Entity()
@@ -57,21 +56,17 @@ export class Company {
   // ? optional params to relation decorators
   @OneToOne(() => Location)
   @JoinColumn({ name: 'location_id' })
-  location!: Location;
+  location?: Location;
 
   @OneToMany(() => User, (user) => user.company)
   @JoinColumn()
-  users!: User[];
+  users?: User[];
 
   @OneToMany(() => Room, (room) => room.company)
   @JoinColumn()
-  rooms!: Room[];
+  rooms?: Room[];
 
   @OneToMany(() => Image, (image) => image.company)
   @JoinColumn()
-  images!: Image[];
-
-  @OneToMany(() => Reservation, (reservation) => reservation.company)
-  @JoinColumn()
-  reservations!: Reservation[];
+  images?: Image[];
 }

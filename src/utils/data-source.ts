@@ -1,10 +1,10 @@
 import { DataSource } from "typeorm";
-import { DataSourceType } from "./types/config";
-import { Feature, Image, Room } from "./entities/Room";
+import { DataSourceType } from "../types/config";
+import { Feature, Image, Room } from "../entities/Room";
 import dotenv from 'dotenv';
-import { Company, Location } from "./entities/Company";
-import { User } from "./entities/User";
-import { Receipt, Reservation } from './entities/Reservation';
+import { Company, Location } from "../entities/Company";
+import { User } from "../entities/User";
+import { Receipt, Reservation } from '../entities/Reservation';
 
 dotenv.config();
 if (
@@ -38,7 +38,7 @@ try {
   throw error;
 }
 
-export const appDataSource = new DataSource({
+const appDataSource = new DataSource({
   type: "mysql",
   // Todo -> configure the dialect to load from the .env
   host,
@@ -47,7 +47,7 @@ export const appDataSource = new DataSource({
   password,
   database,
   logging: true,
-  synchronize: true,
+  synchronize: false,
   entities: [
     Company,
     Room,
@@ -59,3 +59,7 @@ export const appDataSource = new DataSource({
     Location,
   ],
 });
+
+appDataSource.initialize();
+
+export { appDataSource };

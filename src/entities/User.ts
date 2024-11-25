@@ -12,19 +12,19 @@ import { Company } from "./Company";
 @Entity()
 export class User {
   @PrimaryGeneratedColumn("uuid")
-  id!: string;
+  id?: string;
 
   @Column({
     type: 'varchar',
     nullable: false,
   })
-  name!: string;
+  name?: string;
 
   @OneToMany(() => Reservation, (reservation) => reservation.user)
   @JoinColumn()
-  reservations!: Reservation[];
+  reservations?: Reservation[];
 
-  @ManyToOne(() => Company, (company) => company.users)
+  @ManyToOne(() => Company, (company) => company.users, { nullable: false, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'company_id' })
-  company!: Company;
+  company?: Company;
 }
