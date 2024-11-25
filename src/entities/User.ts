@@ -24,7 +24,7 @@ export class User {
   @JoinColumn()
   reservations?: Reservation[];
 
-  @ManyToOne(() => Company, (company) => company.users)
+  @ManyToOne(() => Company, (company) => company.users, { nullable: false, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'company_id' })
   company?: Company;
 }

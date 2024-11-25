@@ -5,10 +5,14 @@ import {
   OneToOne,
   JoinColumn,
   ManyToOne,
+  BeforeInsert,
+  LessThanOrEqual,
+  MoreThanOrEqual,
 } from "typeorm";
 import { User } from "./User";
 import { Company } from "./Company";
 import { Room } from "./Room";
+import ReservationController from "../controllers/reservationController";
 
 @Entity()
 export class Reservation {
@@ -28,11 +32,21 @@ export class Reservation {
   })
   reservationNumber!: string;
 
-  @ManyToOne(() => Company, (company) => company.reservations)
-  @JoinColumn({ name: 'company_id' })
-  company!: Company;
+  @Column({
+    type: 'date',
+    name: 'start_date',
+    nullable: false,
+  })
+  startDate!: Date;
 
-  @OneToOne(() => Room, (room) => room.reservation)
+  @Column({
+    type: 'date',
+    name: 'end_date',
+    nullable: false,
+  })
+  endDate!: Date;
+
+  @ManyToOne(() => Room, (room) => room.reservations, { nullable: false, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'room_id' })
   room!: Room;
 
@@ -40,9 +54,38 @@ export class Reservation {
   @JoinColumn({ name: 'user_id' })
   user?: User;
 
-  @OneToOne(() => Receipt)
+  @OneToOne(() => Receipt, (receipt) => receipt.reservation, { onDelete: 'SET NULL' })
   @JoinColumn({ name: 'receipt_id' })
   receipt?: Receipt;
+
+  @BeforeInsert()
+  verifyTimeRange() {
+    if (this.startDate > this.endDate) {
+      throw new Error(`Start Date cannot be before End Date`);
+    }
+  }
+
+  @BeforeInsert()
+  async hasNonOverlappedTime() {
+    const existingReservations = await ReservationController.reservationsRepository.findOne({
+      where: {
+        startDate: LessThanOrEqual(this.endDate),
+        endDate: MoreThanOrEqual(this.startDate),
+        room: {
+          id: this.room.id,
+        },
+      },
+    });
+
+    if (existingReservations) {
+      throw new Error(
+        `The room is reserved from
+        ${existingReservations.startDate.toISOString().split('T')[0]}
+        to
+        ${existingReservations.endDate.toISOString().split('T')[0]}
+        `);
+    }
+  }
 }
 
 @Entity()
@@ -56,4 +99,8 @@ export class Receipt {
     nullable: false,
   })
   screenshotUrl?: string;
+
+  @OneToOne(() => Reservation, (reservation) => reservation.receipt, { nullable: false, onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'reservation_id' })
+  reservation?: Reservation;
 }

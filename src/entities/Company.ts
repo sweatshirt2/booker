@@ -69,8 +69,4 @@ export class Company {
   @OneToMany(() => Image, (image) => image.company)
   @JoinColumn()
   images?: Image[];
-
-  @OneToMany(() => Reservation, (reservation) => reservation.company)
-  @JoinColumn()
-  reservations?: Reservation[];
 }

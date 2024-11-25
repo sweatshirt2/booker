@@ -52,13 +52,12 @@ export class Room {
   })
   isOccupied?: boolean;
 
-  @ManyToOne(() => Company, (company) => company.rooms)
+  @ManyToOne(() => Company, (company) => company.rooms, { nullable: false })
   @JoinColumn({ name: 'company_id' })
-  company?: Company;
+  company!: Company;
 
-  @OneToOne(() => Reservation, (reservation) => reservation.room)
-  @JoinColumn()
-  reservation?: Reservation;
+  @OneToMany(() => Reservation, (reservation) => reservation.room)
+  reservations?: Reservation[];
 
   @ManyToMany(() => Feature)
   @JoinTable()
@@ -85,7 +84,7 @@ export class Image {
   })
   roomType?: RoomTypes;
 
-  @ManyToOne(() => Company, (company) => company.images)
+  @ManyToOne(() => Company, (company) => company.images, { nullable: false, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'company_id' })
   company?: Company;
 }

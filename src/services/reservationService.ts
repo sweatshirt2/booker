@@ -8,4 +8,12 @@ export class ReservationService {
     const now = new Date().toISOString().split('T')[1];
     return `Res-${reservationsCount}${now}`;
   }
+
+  static transformDates(startDate: string, endDate: string): Date[] {
+    try {
+      return [new Date(startDate), new Date(endDate)];
+    } catch (error) {
+      throw error;
+    }
+  }
 }
