@@ -48,7 +48,7 @@ export default class ReservationController {
 
   static async create(body: ReservationDto): Promise<Partial<Reservation> & { message: string }> {
     try {
-      const [startDate, endDate] = ReservationService.transformDates(body.startDate, body.endDate);
+      const [startDate, endDate] = ReservationService.transformReservationDates(body.startDate, body.endDate);
       const reservationId = await ReservationService.generateUserId();
 
       const processedReservation = this.reservationsRepository.create({

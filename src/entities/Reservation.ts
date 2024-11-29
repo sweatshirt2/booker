@@ -8,6 +8,8 @@ import {
   BeforeInsert,
   LessThanOrEqual,
   MoreThanOrEqual,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from "typeorm";
 import { User } from "./User";
 import { Company } from "./Company";
@@ -57,6 +59,12 @@ export class Reservation {
   @OneToOne(() => Receipt, (receipt) => receipt.reservation, { onDelete: 'SET NULL' })
   @JoinColumn({ name: 'receipt_id' })
   receipt?: Receipt;
+
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt?: Date;
+
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt?: Date;
 
   @BeforeInsert()
   verifyTimeRange() {
